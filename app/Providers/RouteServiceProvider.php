@@ -24,4 +24,11 @@ class RouteServiceProvider extends ServiceProvider
             ->namespace($this->namespace)
             ->group(base_path('routes/api.php'));
     }
+
+    protected function mapWebRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
+    }
 }

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +22,7 @@ class AuthController extends Controller
 {
     public function print()
     {
-        return response()->json(['message' => 'Hello']);
+        return response()->json(['message' => 'Print route is working']);
     }
     
     public function register(Request $request)
