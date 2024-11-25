@@ -6,11 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * @OA\Tag(
@@ -27,32 +23,21 @@ class AuthController extends Controller
     
     public function register(Request $request)
     {
-        echo "Hello";
-        $validated = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        if ($validated->fails()) {
-            return response()->json([
-                'message' => 'Validation failed',
-                'errors' => $validated->errors()
-            ], 422);
-        }
-
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
+            'name' => $request->name,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
-            'remember_token' => Str::random(60),
         ]);
 
-        // $token = $user->createToken('API Token')->plainTextToken;
-
         return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
+            'message' => 'User registered successfully',
+            'user' => $user,
         ], 201);
     }
 
@@ -62,16 +47,24 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
-
+    
         $user = User::where('email', $request->email)->first();
-
+    
+        // Check if the user exists and the password matches
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json([
+                'message' => 'Invalid credentials',
+            ], 401);
         }
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json(['token' => $token], 200);
+   
+        // Generate a token (if using Sanctum or similar)
+        $token = $user->createToken('authToken')->plainTextToken;//return $token; 
+    
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => $user,
+            'token' => $token,
+        ], 200);
     }
 
     public function resetPassword(Request $request)
