@@ -57,13 +57,11 @@ class AuthController extends Controller
             ], 401);
         }
    
-        // Generate a token (if using Sanctum or similar)
-        $token = $user->createToken('authToken')->plainTextToken;//return $token; 
+        // $token = $user->createToken('authToken')->plainTextToken;return $token; 
     
         return response()->json([
             'message' => 'Login successful',
             'user' => $user,
-            'token' => $token,
         ], 200);
     }
 

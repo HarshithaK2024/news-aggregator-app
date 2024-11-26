@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 
 class Article extends Model
 {
     use HasFactory;
+
+    protected $connection = 'mongodb';
+
+    protected $collection = 'articles';
 
     protected $fillable = [
         'title',
